@@ -5,7 +5,6 @@ import(
 	"net/http"
 	"io"
 	"strings"
-	"fmt"
 	"encoding/json"
 )
 
@@ -39,15 +38,21 @@ func (deluge *Deluge) sendCommand(method string, params interface{}) (json.RawMe
 
 	var r Response
 	err2 := json.NewDecoder(resp.Body).Decode(&r);
+	if err2 != nil {
+		return nil, err2
+	}
 
 	c := resp.Header.Get("Set-Cookie")
 	if c != ""{
 		deluge.Session = strings.Split(c, ";")[0]
 	}
 
-	fmt.Println("error:" + r.Error.Message) //DEBUGGGGGGG!!!!!1
+	var err3 error
+	if r.Error.Message != "" {
+		err3 = errors.New("error:" + r.Error.Message)
+	}
 
-	return r.Result, err2
+	return r.Result, err3
 }
 
 func (deluge *Deluge) login() ( error){

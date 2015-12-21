@@ -22,9 +22,19 @@ func (deluge Deluge) Get_Torrent_Status(hash string, types []string) (map[string
 
 	var i interface{}
 	err1 := json.Unmarshal(result, &i)
+	if err1 != nil {
+		return nil, err1
+	}
+
 	m := i.(map[string]interface{})
 
-	return m, err1
+	for _, v := range types{
+		if m[v] == nil {
+			return nil, errors.New(v + " is invalid")
+		}
+	}
+
+	return m, nil
 }
 
 func (deluge Deluge) Add_Torrents(magnet string) (error){
