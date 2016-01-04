@@ -21,7 +21,9 @@ func (deluge *Deluge) sendCommand(method string, params interface{}) (json.RawMe
 	}()
 
 	req, err1 := http.NewRequest("POST", "http://wolkopslag.nl:8112/json", reader)
-	req.Header.Add("Cookie", deluge.Session)
+	if method != "auth.login" {
+		req.Header.Add("Cookie", deluge.Session)
+	}
 	resp, err11 := http.DefaultClient.Do(req)
 
 	if err != nil {
@@ -49,7 +51,12 @@ func (deluge *Deluge) sendCommand(method string, params interface{}) (json.RawMe
 
 	var err3 error
 	if r.Error.Message != "" {
-		err3 = errors.New("error:" + r.Error.Message)
+		if r.Error.Message == "Not authenticated" {
+			deluge.login()
+			return deluge.sendCommand(method, params)
+		}else{
+			err3 = errors.New("error:" + r.Error.Message)
+		}
 	}
 
 	return r.Result, err3
