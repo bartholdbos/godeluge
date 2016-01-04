@@ -3,6 +3,7 @@ package godeluge
 import(
 	"encoding/json"
 	"errors"
+	"strings"
 )
 
 func NewDeluge(password string) (*Deluge, error) {
@@ -15,7 +16,7 @@ func NewDeluge(password string) (*Deluge, error) {
 }
 
 func (deluge Deluge) Get_Torrent_Status(hash string, types []string) (map[string]interface {}, error) {
-	result, err := deluge.sendCommand("web.get_torrent_status", []interface{} {hash, types})
+	result, err := deluge.sendCommand("web.get_torrent_status", []interface{} {strings.ToLower(hash), types})
 	if err != nil {
 		return nil, err
 	}
