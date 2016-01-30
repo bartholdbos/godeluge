@@ -38,6 +38,26 @@ func (deluge Deluge) Get_Torrent_Status(hash string, types []string) (map[string
 	return m, nil
 }
 
+func (deluge Deluge) Remove_Torrent(magnet string) (error){
+	result, err := deluge.sendCommand("core.remove_torrent", []interface{} {magnet, true})
+	if err != nil {
+		return err
+	}
+
+	var i bool
+	err1 := json.Unmarshal(result, &i)
+
+	if err1 != nil {
+		return err1
+	}
+
+	if !i {
+		return errors.New("Error removing torrent")
+	}
+
+	return nil
+}
+
 func (deluge Deluge) Add_Torrents(magnet string) (error){
 	result, err := deluge.sendCommand("web.add_torrents", []interface{} {[]interface{} {map[string]interface {} {"path": magnet, "options": nil}}})
 	if err != nil {
