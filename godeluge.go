@@ -6,8 +6,8 @@ import(
 	"strings"
 )
 
-func NewDeluge(password string) (*Deluge, error) {
-	var deluge Deluge = Deluge{Password: password}
+func NewDeluge(url string, password string) (*Deluge, error) {
+	var deluge Deluge = Deluge{URL: url, Password: password}
 	var err error
 
 	err = deluge.login()

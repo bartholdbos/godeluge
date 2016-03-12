@@ -7,6 +7,7 @@ import(
 type Deluge struct{
 	Session string
 	Password string
+	URL string
 	Id int32
 }
 

@@ -20,7 +20,7 @@ func (deluge *Deluge) sendCommand(method string, params interface{}) (json.RawMe
 		err = json.NewEncoder(writer).Encode(&request)
 	}()
 
-	req, err1 := http.NewRequest("POST", "http://wolkopslag.nl:8112/json", reader)
+	req, err1 := http.NewRequest("POST", deluge.URL, reader)
 	if method != "auth.login" {
 		req.Header.Add("Cookie", deluge.Session)
 	}
