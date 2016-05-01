@@ -39,7 +39,7 @@ func (deluge Deluge) Get_Torrent_Status(hash string, types []string) (map[string
 }
 
 func (deluge Deluge) Remove_Torrent(magnet string) (error){
-	result, err := deluge.sendCommand("core.remove_torrent", []interface{} {magnet, true})
+	result, err := deluge.sendCommand("core.remove_torrent", []interface{} {strings.ToLower(magnet), true})
 	if err != nil {
 		return err
 	}
